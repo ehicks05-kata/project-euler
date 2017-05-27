@@ -1,4 +1,4 @@
-#Project Euler Solutions
+# Project Euler Solutions
 
 Project Euler is a collection of problems designed to be solved algorithmically. 
 I started attempting these problems when I began learning Java. These are my solutions.
