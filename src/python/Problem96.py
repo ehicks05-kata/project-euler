@@ -1,62 +1,82 @@
 import copy
 
+verbose_log = False
+
 
 def main():
     file = open('../data/Problem96Sudoku.txt')
-    lines = file.read().split("\n")[1:]
+    lines = file.read().split("\n")
 
     answer = 0
 
     grid = []
+    current_grid = 1
     for line in lines:
         if line.startswith("Grid"):
-            print_grid(grid)
-            determine_possible_values(grid)
-            print_grid(grid)
-            solve_trivial(grid)
-            print_grid(grid)
+            continue
 
-            if not is_puzzle_solved(grid):
-                solve_advanced(grid)
-
-            first_three_digits = str(grid[0][0]) + str(grid[0][1]) + str(grid[0][2])
-            print(first_three_digits)
-            answer += int(first_three_digits)
-            grid = []
-        else:
+        if len(grid) < 9:
             row = [int(cell) for cell in line]
             grid.append(row)
+
+        if len(grid) == 9:
+            print("\nGrid " + str(current_grid) + ":")
+
+            print_grid(grid)
+            determine_possible_values(grid)
+            if verbose_log:
+                print_grid(grid)
+            solve_trivial(grid)
+            if verbose_log:
+                print_grid(grid)
+
+            if not is_puzzle_solved(grid):
+                grid = solve_advanced(grid)
+
+            print_grid(grid)
+
+            first_three_digits = str(grid[0][0]) + str(grid[0][1]) + str(grid[0][2])
+            print(str(answer) + " + " + first_three_digits + " = " + str(answer + int(first_three_digits)))
+            answer += int(first_three_digits)
+            grid = []
+            current_grid += 1
 
     print("\n" + str(answer))
 
 
 def solve_advanced(grid):
-    answer_grid = solve_recursive(grid)
-    return answer_grid
+    answer = solve_recursive(grid, False)
+    return answer[0]
 
 
-def solve_recursive(grid):
+def solve_recursive(grid, solved):
     first_unsolved_cell = get_first_unsolved_cell(grid)
     if first_unsolved_cell is None:
-        print_grid(grid)
-        return grid
+        # print_grid(grid)
+        return grid, True
 
     row, col = first_unsolved_cell[0], first_unsolved_cell[1]
     for value in grid[row][col]:
-        grid = copy.deepcopy(grid)
-        grid[row][col] = value
-        solve_trivial(grid)
+        work_grid = copy.deepcopy(grid)
+        work_grid[row][col] = value
+        cascade_cell_solution(work_grid, row, col)
+        solve_trivial(work_grid)
 
-        if not is_grid_valid(grid):
-            return
+        if is_grid_valid(work_grid):
+            _, solved = solve_recursive(work_grid, False)
+            if solved:
+                return _, solved
 
-        solve_recursive(grid)
+    return grid, False
 
 
 def is_grid_valid(grid):
     for row in range(len(grid)):
         for col in range(len(grid[row])):
             value = grid[row][col]
+
+            if not value:
+                return False
 
             related_cells = get_related_cells(row, col)
             related_cells.remove((row, col))
@@ -107,8 +127,9 @@ def solve_trivial_one_loop(grid):
             if type(cell_value) == set:
                 # if the length of the set is 1, replace it with that one value
                 if len(cell_value) == 1:
-                    print("replacing " + str(cell_value) + " with " + str(list(cell_value)[0]) +
-                          " @ position (" + str(row) + ", " + str(col) + ")")
+                    if verbose_log:
+                        print("replacing " + str(cell_value) + " with " + str(list(cell_value)[0]) +
+                              " @ position (" + str(row) + ", " + str(col) + ")")
                     cell_value = list(cell_value)[0]
                     grid[row][col] = cell_value
                     cascade_cell_solution(grid, row, col)
@@ -116,15 +137,29 @@ def solve_trivial_one_loop(grid):
 
                 # determine how many times each number in the set appears in the box, row, and col
                 for value in cell_value:
-                    count = count_occurrences(grid, row, col, value)
-                    if count == 1:
-                        print("replacing " + str(cell_value) + " with " + str(value) +
-                              " @ position (" + str(row) + ", " + str(col) + ")")
+                    if is_unique_within_box_row_or_col(grid, row, col, value):
+                        if verbose_log:
+                            print("replacing " + str(cell_value) + " with " + str(value) +
+                                  " @ position (" + str(row) + ", " + str(col) + ")")
                         grid[row][col] = value
                         cascade_cell_solution(grid, row, col)
                         return True
 
     return False
+
+
+def is_unique_within_box_row_or_col(grid, row, col, val):
+    box_coordinates = get_box_coordinates(row, col)
+    cells_in_box = get_cells(*box_coordinates)
+    cells_in_row = get_cells(row, row + 1, 0, 9)
+    cells_in_col = get_cells(0, 9, col, col + 1)
+
+    values_in_box = get_values_from_cells(grid, cells_in_box)
+    values_in_row = get_values_from_cells(grid, cells_in_row)
+    values_in_col = get_values_from_cells(grid, cells_in_col)
+
+    # if our value is unique within its box, row, or col, then it must be the right number
+    return values_in_box.count(val) < 2 or values_in_row.count(val) < 2 or values_in_col.count(val) < 2
 
 
 def cascade_cell_solution(grid, row, col):
@@ -135,8 +170,9 @@ def cascade_cell_solution(grid, row, col):
         if type(cell_value) == set and solved_cell_value in cell_value:
             new_cell_value = set(cell_value)
             new_cell_value.remove(solved_cell_value)
-            print("  replacing " + str(cell_value) + " with " + str(new_cell_value) +
-                  " @ position (" + str(row) + ", " + str(col) + ")")
+            if verbose_log:
+                print("  replacing " + str(cell_value) + " with " + str(new_cell_value) +
+                      " @ position (" + str(row) + ", " + str(col) + ")")
             cell_value.remove(solved_cell_value)
 
 
@@ -231,6 +267,9 @@ def print_grid(grid):
         for col in range(9):
             print_width = col_widths[col]
             cell_value = grid[row][col]
+
+            if type(cell_value) is set:
+                cell_value = sorted(list(cell_value))
 
             if col % 3 == 0:
                 row_string += "| "
