@@ -1,4 +1,4 @@
-import sys
+import copy
 
 
 def main():
@@ -27,11 +27,61 @@ def main():
             row = [int(cell) for cell in line]
             grid.append(row)
 
-    print("\n" + answer)
+    print("\n" + str(answer))
 
 
 def solve_advanced(grid):
-    print("todo")
+    answer_grid = solve_recursive(grid)
+    return answer_grid
+
+
+def solve_recursive(grid):
+    first_unsolved_cell = get_first_unsolved_cell(grid)
+    if first_unsolved_cell is None:
+        print_grid(grid)
+        return grid
+
+    row, col = first_unsolved_cell[0], first_unsolved_cell[1]
+    for value in grid[row][col]:
+        grid = copy.deepcopy(grid)
+        grid[row][col] = value
+        solve_trivial(grid)
+
+        if not is_grid_valid(grid):
+            return
+
+        solve_recursive(grid)
+
+
+def is_grid_valid(grid):
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            value = grid[row][col]
+
+            related_cells = get_related_cells(row, col)
+            related_cells.remove((row, col))
+            for r, c in related_cells:
+                rc_value = grid[r][c]
+                if type(rc_value) is int and rc_value == value:
+                    return False
+    return True
+
+
+def get_first_unsolved_cell(grid):
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            if type(grid[row][col]) is not int:
+                return row, col
+    return None
+
+
+def get_unsolved_cells(grid):
+    unsolved_cells = 0
+    for row in range(len(grid)):
+        for col in range(len(grid[row])):
+            if type(grid[row][col]) is not int:
+                unsolved_cells += 1
+    return unsolved_cells
 
 
 def get_box_coordinates(row, col):
@@ -41,11 +91,7 @@ def get_box_coordinates(row, col):
 
 
 def is_puzzle_solved(grid):
-    for row in range(len(grid)):
-        for col in range(len(grid[row])):
-            if type(grid[row][col]) is not int:
-                return False
-    return True
+    return get_unsolved_cells(grid) == 0
 
 
 def solve_trivial(grid):
