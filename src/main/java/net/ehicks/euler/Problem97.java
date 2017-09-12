@@ -16,6 +16,28 @@ public class Problem97
     {
         Timer timer = new Timer();
 
+        naiveWay();
+
+        fasterWay();
+
+        timer.printDuration();
+    }
+
+    private static void fasterWay()
+    {
+        long i = 28433;
+        for (int j = 1; j <= 7830457; j++)
+        {
+            i *= 2;
+            i = i % 10_000_000_000L;
+        }
+        i += 1;
+
+        System.out.println("Find the last ten digits of this prime number: " + i);
+    }
+
+    private static void naiveWay()
+    {
         BigInteger prime = BigInteger.valueOf(2);
         prime = prime.pow(7830457);
         prime = prime.multiply(BigInteger.valueOf(28433));
@@ -24,8 +46,7 @@ public class Problem97
         String primeString = prime.toString();
 
         String lastTenDigits = primeString.substring(primeString.length() - 10);
-
         System.out.println("Find the last ten digits of this prime number: " + lastTenDigits);
-        timer.printDuration();
+
     }
 }

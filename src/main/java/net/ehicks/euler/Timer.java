@@ -20,7 +20,8 @@ public class Timer
         long durationInMinutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds);
         long durationInSeconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds);
         long leftoverSeconds = durationInSeconds - TimeUnit.MINUTES.toSeconds(durationInMinutes);
-        String duration = String.format("%d min, %d sec", durationInMinutes, leftoverSeconds);
+        long leftoverMillis = milliseconds - TimeUnit.SECONDS.toMillis(durationInSeconds);
+        String duration = String.format("%d min, %d.%03d sec", durationInMinutes, leftoverSeconds, leftoverMillis);
         System.out.println("Duration: " + duration);
     }
 
