@@ -22,8 +22,7 @@ def main():
 
     print(str(i)[-10:])
 
-    duration = str(time.time() - start)
-    print("\ntook " + duration + " seconds")
+    print("\ntook " + str(time.time() - start) + " seconds")
 
 
 if __name__ == '__main__':
