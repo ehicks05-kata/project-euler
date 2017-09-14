@@ -52,49 +52,35 @@ def main():
     squares_by_length = get_square_length_to_squares(longest_anagram_word_length)
 
     largest_pair_member = 0
-    for k, v in anagram_groups.items():
-        print(str(v))
-        # todo: this currently only handles anagram groups with 2 numbers. it won't handle a 3rd number in the group
-        words_in_anagram_group = v
-        first_word = words_in_anagram_group[0]
-        anagram_length = len(first_word)
-        second_word = words_in_anagram_group[1]
+    for k, anagram_group_members in anagram_groups.items():
+        anagram_length = len(anagram_group_members[0])
 
-        for permutation in itertools.permutations(range(1, 10), anagram_length):
-            if permutation[anagram_length - 1] in (2, 3, 7, 8):
-                continue
+        for anagram_pair in itertools.combinations(anagram_group_members, 2):
+            print(str(anagram_pair))
+            first_word = anagram_pair[0]
+            second_word = anagram_pair[1]
+            
+            for permutation in itertools.permutations(range(1, 10), anagram_length):
+                if permutation[anagram_length - 1] in (2, 3, 7, 8):
+                    continue
 
-            letter_to_number_dict = {}
-            for i in range(anagram_length):
-                letter = list(first_word)[i]
-                letter_to_number_dict[letter] = permutation[i]
+                letter_to_number_dict = {}
+                for i in range(anagram_length):
+                    letter = list(first_word)[i]
+                    letter_to_number_dict[letter] = permutation[i]
 
-            first_word_as_number = word_to_number(first_word, letter_to_number_dict)
+                first_word_as_number = word_to_number(first_word, letter_to_number_dict)
 
-            if first_word_as_number in squares_by_length[anagram_length]:
+                if first_word_as_number in squares_by_length[anagram_length]:
 
-                second_word_as_number = word_to_number(second_word, letter_to_number_dict)
-                if second_word_as_number in squares_by_length[anagram_length]:
-                    print("FOUND PAIR: " + str(first_word_as_number) + ", " + str(second_word_as_number) + "... " +
-                          str(letter_to_number_dict))
-                    largest_pair_member = max(largest_pair_member, first_word_as_number, second_word_as_number)
-
-        if largest_pair_member > 0:
-            break
+                    second_word_as_number = word_to_number(second_word, letter_to_number_dict)
+                    if second_word_as_number in squares_by_length[anagram_length]:
+                        print("FOUND PAIR: " + str(first_word_as_number) + ", " + str(second_word_as_number) + "... " +
+                              str(letter_to_number_dict))
+                        largest_pair_member = max(largest_pair_member, first_word_as_number, second_word_as_number)
 
     print("\nanswer: " + str(largest_pair_member))
     print("\ntook " + str(time.time() - start) + " seconds")
-
-
-def get_word_lengths(words):
-    words = sorted(words, key=len, reverse=True)
-    word_lengths = {}
-    for word in words:
-        if len(str(word)) in word_lengths.keys():
-            word_lengths[len(str(word))].append(word)
-        else:
-            word_lengths[len(str(word))] = [word]
-    return word_lengths
 
 
 def word_to_number(word, letter_to_number_dict):
@@ -106,19 +92,17 @@ def word_to_number(word, letter_to_number_dict):
 
 
 def get_anagram_groups(words):
-    word_lengths = get_word_lengths(words)
-
     anagram_groups = {}
-    for key, val in word_lengths.items():
-        words_of_length = val
-        for word_of_length in words_of_length:
-            word = Word(word_of_length)
-            letter_counts_as_str = word.letter_counts_as_str()
 
-            if letter_counts_as_str in anagram_groups.keys():
-                anagram_groups[letter_counts_as_str].append(word.word)
-            else:
-                anagram_groups[letter_counts_as_str] = [word.word]
+    words = sorted(words, key=len, reverse=True)
+    for word in words:
+        word = Word(word)
+        letter_counts_as_str = word.letter_counts_as_str()
+
+        if letter_counts_as_str in anagram_groups.keys():
+            anagram_groups[letter_counts_as_str].append(word.word)
+        else:
+            anagram_groups[letter_counts_as_str] = [word.word]
 
     keys_to_remove = set()
     for key in anagram_groups.keys():
@@ -152,13 +136,6 @@ def get_square_length_to_squares(longest_word_length):
             if length > longest_word_length:
                 break
             square_lengths[length] = [square]
-
-    total_squares = 0
-    print(len(square_lengths))
-    for key, val in square_lengths.items():
-        print(str(key) + ":" + str(len(val)))
-        total_squares += len(val)
-    print("total squares: " + str(total_squares))
 
     return square_lengths
 
