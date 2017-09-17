@@ -18,10 +18,10 @@ import math
 def main():
     start = time.time()
 
-    fractions_between_third_and_half = set()
+    fractions_between_third_and_half = 0
     for d in range(1, 12001):
         if d % 1000 == 0:
-            print("d=" + str(d) + ", fractions found=" + str(len(fractions_between_third_and_half)))
+            print("d=" + str(d) + ", fractions found=" + str(fractions_between_third_and_half))
 
         for n in range(d // 3, d):
             decimal = n / d
@@ -31,10 +31,10 @@ def main():
                 break
 
             gcd = math.gcd(n, d)
-            fraction = (n // gcd, d // gcd)
-            fractions_between_third_and_half.add(fraction)
+            if gcd == 1:
+                fractions_between_third_and_half += 1
 
-    print("\nanswer: " + str(len(fractions_between_third_and_half)))
+    print("\nanswer: " + str(fractions_between_third_and_half))
     print("\ntook " + str(time.time() - start) + " seconds")
 
 
