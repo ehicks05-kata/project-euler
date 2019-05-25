@@ -1,10 +1,12 @@
 import copy
+import time
 
 verbose_log = False
 
 
 def main():
-    file = open('../data/Problem96Sudoku.txt')
+    start = time.time()
+    file = open('../data/sudoku1.txt')
     lines = file.read().split("\n")
 
     answer = 0
@@ -42,6 +44,7 @@ def main():
             current_grid += 1
 
     print("\n" + str(answer))
+    print("\ntook " + str(time.time() - start) + " seconds")
 
 
 def solve_advanced(grid):
