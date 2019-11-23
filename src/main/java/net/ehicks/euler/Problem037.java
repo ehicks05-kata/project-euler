@@ -36,7 +36,7 @@ public class Problem037
             if (isPrime(i) && isTruncatable(i))
             {
                 System.out.println(i);
-                Problem37.sum += i;
+                sum += i;
             }
         }
 

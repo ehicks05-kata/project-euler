@@ -6,7 +6,7 @@ public class Problem006
     public static void main(String[] args)
     {
         final int TEST_NUM = 100;
-        Problem06.findDifference(TEST_NUM);
+        findDifference(TEST_NUM);
     }
 
     public static void findDifference(int n)
