@@ -11,7 +11,7 @@ public class Problem013
         String input;
 
         //open file
-        File file = new File("src/data/Problem13.txt");
+        File file = new File("src/data/Problem013.txt");
         Scanner inputFile = new Scanner(file);
 
 

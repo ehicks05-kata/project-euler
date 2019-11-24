@@ -23,7 +23,7 @@ public class Problem067
 {
     public static void main(String[] args) throws IOException
     {
-        String path = "src/data/Problem67Triangle.txt";
+        String path = "src/data/Problem067Triangle.txt";
 
         int levels = getLevels(path);
         int elements = getElements(levels);

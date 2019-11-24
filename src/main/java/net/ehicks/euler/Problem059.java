@@ -31,7 +31,7 @@ public class Problem059
     {
         long startTime = System.currentTimeMillis();
 
-        String cipher = Files.readAllLines(Paths.get("problem59cipher.txt"), Charset.defaultCharset()).get(0);
+        String cipher = Files.readAllLines(Paths.get("src/data/problem059cipher.txt"), Charset.defaultCharset()).get(0);
         List<String> cypherBytes = Arrays.asList(cipher.split(","));
 
         List<List<Byte>> keys = getPossibleKeys();

@@ -21,7 +21,7 @@ public class Problem022
         int sum;
         int total = 0;
 
-        File inputFile = new File("Problem22Names.txt"); //input file
+        File inputFile = new File("src/data/Problem022Names.txt"); //input file
         Scanner inputFileNames = new Scanner(inputFile); //scanner to read the input file
 
         //read entire input file and add to String temp

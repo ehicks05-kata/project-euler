@@ -22,7 +22,7 @@ public class Problem042
         String[] words = null;
         try
         {
-            BufferedReader br = new BufferedReader(new FileReader("Problem42Words.txt"));
+            BufferedReader br = new BufferedReader(new FileReader("src/data/Problem042Words.txt"));
             String inputText = br.readLine();
             inputText = inputText.replaceAll("\"", "");
             words = inputText.split(",");

@@ -53,7 +53,7 @@ public class Problem054
 
         int p1Wins = 0;
         int lineNumber = 1;
-        try (BufferedReader br = new BufferedReader(new FileReader("problem54poker.txt")))
+        try (BufferedReader br = new BufferedReader(new FileReader("src/data/problem054poker.txt")))
         {
             while (br.ready())
             {

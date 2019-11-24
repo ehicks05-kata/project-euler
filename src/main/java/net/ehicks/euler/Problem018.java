@@ -23,7 +23,7 @@ public class Problem018
     {
         int levels = 0;
         //open file
-        File file = new File("src/data/Problem18.txt");
+        File file = new File("src/data/Problem018.txt");
         Scanner lengthScanner = new Scanner(file);
         //count how many levels are in the triangle
         while(lengthScanner.hasNext())
@@ -64,7 +64,7 @@ public class Problem018
         int length, count, testNum, m = 0;
         String sub, input;
         //open file
-        File file = new File("src/data/Problem18.txt");
+        File file = new File("src/data/Problem018.txt");
         Scanner inputFile = new Scanner(file);
         //create int array for the tree
         int[][] tree2D = new int[levels][levels];

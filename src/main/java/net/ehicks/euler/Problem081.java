@@ -71,7 +71,7 @@ public class Problem081
     private static int[][] getMatrix() throws IOException
     {
         int[][] matrix = new int[80][80];
-        List<String> allLines = Files.readAllLines(Paths.get("web/euler/Problem81Matrix.txt"));
+        List<String> allLines = Files.readAllLines(Paths.get("src/data/Problem081Matrix.txt"));
         int row = 0;
         for (String line : allLines)
         {

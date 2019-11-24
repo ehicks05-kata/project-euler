@@ -25,7 +25,7 @@ public class Problem099
     {
         Timer timer = new Timer();
 
-        List<String> lines = Files.readAllLines(Paths.get("web/euler/Problem99exp.txt"));
+        List<String> lines = Files.readAllLines(Paths.get("src/data/Problem099exp.txt"));
         BigDecimal greatestValue = BigDecimal.ZERO;
         int lineWithGreatestValue = 0;
 
